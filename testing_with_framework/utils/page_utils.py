@@ -4,17 +4,19 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from appium.webdriver.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from appium.webdriver.webelement import AppiumWebElement
+from appium import webdriver
 
 
 class PageUtils:
-    def __init__(self, driver, use_wait_driver: bool = False):
+    def __init__(self, driver: webdriver, use_wait_driver: bool = False):
         self.driver = driver
         if use_wait_driver:
             self.wait = WebDriverWait(self.driver, 10)
         else:
             self.driver.implicitly_wait(40)
 
-    def get_element(self, locator: tuple) -> WebElement:
+    def get_element(self, locator: tuple) -> AppiumWebElement:
         """
         Returns element based on provided locator.
 
@@ -51,7 +53,7 @@ class PageUtils:
         else:
             return Exception("invalid locator method")
 
-    def wait_visible(self, locator, timeout=25):
+    def wait_visible(self, locator, timeout=25) -> AppiumWebElement:
         try:
             return self.wait.until(
                 EC.visibility_of_element_located(
@@ -62,7 +64,7 @@ class PageUtils:
             print("Element not found within 10 seconds")
             raise NoSuchElementException
 
-    def wait_clickable(self, locator: tuple):
+    def wait_clickable(self, locator: tuple) -> AppiumWebElement:
         try:
             return self.wait.until(
                 EC.element_to_be_clickable(
@@ -73,5 +75,5 @@ class PageUtils:
             print("Element not found within 10 seconds")
             raise NoSuchElementException
 
-    def hide_keyboard(self):
+    def hide_keyboard(self) -> None:
         self.driver.hide_keyboard()

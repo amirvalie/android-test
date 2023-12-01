@@ -1,12 +1,13 @@
 from pages.login_page import LoginPage
+from appium import webdriver
 
 
 class LoginAction:
-    def __init__(self, driver):
+    def __init__(self, driver: webdriver) -> None:
         self.driver = driver
         self.login = LoginPage(driver)
 
-    def login_steps(self, username: str, password: str):
+    def login_steps(self, username: str, password: str) -> None:
         self.login.click_login_button()
         self.login.input_username_field(username)
         self.login.input_password(password)

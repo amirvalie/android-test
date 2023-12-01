@@ -1,11 +1,12 @@
 from actions.change_language_action import ChangeLanguageAction
-from utils.setup_driver import exec_driver
+from utils.setup_driver import AppiumDriverSetup
 from actions.create_home_action import CreateHome
 from actions.logout_action import LogoutAction
 from actions.login_action import LoginAction
 from actions.add_reminder_action import ReminderAction
 
-driver = exec_driver()
+appium_driver_setup = AppiumDriverSetup()
+driver = appium_driver_setup.setup_driver()
 
 # create_home = CreateHome(driver)
 # create_home.create_home_steps()

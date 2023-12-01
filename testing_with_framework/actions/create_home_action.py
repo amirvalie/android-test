@@ -1,14 +1,15 @@
 from pages.add_home_page import AddHomePage
 from pages.index_page import IndexPage
+from appium import webdriver
 
 
 class CreateHome:
-    def __init__(self, driver) -> None:
+    def __init__(self, driver: webdriver) -> None:
         self.driver = driver
         self.add_home = AddHomePage(driver)
         self.index = IndexPage(driver)
 
-    def create_home_steps(self):
+    def create_home_steps(self) -> None:
         self.index.click_add_button()
         self.index.click_home_button()
         self.add_home.input_home_title(f"Home {self.add_home.random_text()}")

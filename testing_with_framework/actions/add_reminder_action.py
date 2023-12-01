@@ -1,12 +1,13 @@
 from pages.assistant_page import ReminderPage
+from appium import webdriver
 
 
 class ReminderAction:
-    def __init__(self, driver) -> None:
+    def __init__(self, driver: webdriver) -> None:
         self.driver = driver
         self.reminder_page = ReminderPage(driver)
 
-    def reminder_steps(self):
+    def reminder_steps(self) -> None:
         self.reminder_page.click_assistant_button()
         self.reminder_page.click_reminder_button()
         self.reminder_page.input_food_name_field("Gormeh sabzi")
