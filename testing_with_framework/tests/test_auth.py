@@ -15,7 +15,7 @@ class AuthenticationTest(TestCase):
         self.appium_driver_setup.teardown_driver()
 
     def test_login(self):
-        login_info = {"username": "AmirValie", "password": "amir12@$A"}
+        login_info = {"username": "test", "password": "test"}
         login_action = LoginAction(self.driver)
         index_page = IndexPage(self.driver)
         login_action.login_steps(login_info["username"], login_info["password"])

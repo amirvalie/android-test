@@ -18,7 +18,7 @@ driver = appium_driver_setup.setup_driver()
 # logout.logout_steps()
 
 login = LoginAction(driver)
-login.login_steps("AmirValiee", "amir12@$A")
+login.login_steps("test", "test")
 
 # remider = ReminderAction(driver)
 # remider.reminder_steps()
