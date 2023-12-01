@@ -2,15 +2,14 @@ from pages.setting_page import SettingPage
 from pages.index_page import IndexPage
 
 
-class LanguageActions:
+class ChangeLanguageAction:
     def __init__(self, driver):
         self.driver = driver
         self.home_page = IndexPage(driver)
         self.setting_page = SettingPage(driver)
 
-    def change_language(self):
-        home_button = self.home_page.click_home_button()
-
+    def change_language_steps(self):
+        home_button = self.home_page.select_home_button()
         if "خانه" in str(home_button.get_attribute("content-desc")):
             self.home_page.click_setting_button_farsi()
             self.setting_page.click_language_button_farsi()

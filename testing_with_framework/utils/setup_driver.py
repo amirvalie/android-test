@@ -10,6 +10,7 @@ def exec_driver():
         "app": "/home/amir/Downloads/Programs/Smartboom.apk",
         "noReset": True,
     }
+    print("**************************** Driver Setup ****************************")
     # Initialize the Appium driver
     driver = webdriver.Remote("http://localhost:4723/wd/hub", desired_caps)
     driver.implicitly_wait(30)

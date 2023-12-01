@@ -1,18 +1,20 @@
-from time import sleep
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
-from time import sleep
 from appium.webdriver.common.appiumby import AppiumBy
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from appium.webdriver.webelement import WebElement
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class PageUtils:
-    def __init__(self, driver):
+    def __init__(self, driver, use_wait_driver: bool = False):
         self.driver = driver
+        if use_wait_driver:
+            self.wait = WebDriverWait(self.driver, 10)
+        else:
+            self.driver.implicitly_wait(40)
 
-    # get elements
-    # posts_icon = ('accessibility_id', 'Posts') > Sample Locator Value
-    def get_element(self, locator: tuple) -> WebElement | Exception:
+    def get_element(self, locator: tuple) -> WebElement:
         """
         Returns element based on provided locator.
 
@@ -20,80 +22,56 @@ class PageUtils:
         :param locator:
         :return:
         """
-
         method = locator[0]
         values = locator[1]
-        try:
-            return self.get_element_by_type(method, values)
-        except:
-            raise NoSuchElementException
+        obj = self.get_element_by_type(method, values)
+        print("*** Element object ***", obj)
+        return obj
 
     def get_element_by_type(self, method: str, value: str):
+        try:
+            return self.driver.find_element(
+                by=self.find_element_type(method), value=value
+            )
+        except:
+            print("Can not find element")
+            raise NoSuchElementException
+
+    def find_element_type(self, method: str) -> str | Exception:
         if method == "accissibility_id":
-            return self.driver.find_element(by=AppiumBy.ACCESSIBILITY_ID, value=value)
+            return AppiumBy.ACCESSIBILITY_ID
         elif method == "class":
-            return self.driver.find_element(by=AppiumBy.CLASS_NAME, value=value)
+            return AppiumBy.CLASS_NAME
         elif method == "id":
-            return self.driver.find_element(by=AppiumBy.ID, value=value)
+            return AppiumBy.ID
         elif method == "xpath":
-            print(value)
-            print(method)
-            return self.driver.find_element(by=AppiumBy.XPATH, value=value)
+            return AppiumBy.XPATH
         elif method == "name":
-            return self.driver.find_element(by=AppiumBy.NAME, value=value)
+            return AppiumBy.NAME
         else:
             return Exception("invalid locator method")
 
-    # element visible
-    # def is_visible(self, locator):
-    #     try:
-    #         self.get_element(locator).is_displayed()
-    #         return True
-    #     except NoSuchElementException:
-    #         return False
-
     def wait_visible(self, locator, timeout=25):
-        i = 0
-        while i != timeout:
-            try:
-                return self.get_element(locator)
-            except NoSuchElementException:
-                sleep(1)
-                i += 1
-        raise Exception(
-            "Element never became visible: %s (%s)" % (locator[0], locator[1])
-        )
+        try:
+            return self.wait.until(
+                EC.visibility_of_element_located(
+                    (self.find_element_type(locator[0]), locator[1])
+                )
+            )
+        except TimeoutException:
+            print("Element not found within 10 seconds")
+            raise NoSuchElementException
 
-    # clicks and taps
-    def click(self, locator):
-        element = self.wait_visible(locator)
-        element.click()
-
-    def tap(self, locator):
-        element = self.wait_visible(locator)
-        element.tap()
+    def wait_clickable(self, locator: tuple):
+        try:
+            return self.wait.until(
+                EC.element_to_be_clickable(
+                    (self.find_element_type(locator[0]), locator[1])
+                )
+            )
+        except TimeoutException:
+            print("Element not found within 10 seconds")
+            raise NoSuchElementException
 
     def hide_keyboard(self):
-        try:
-            sleep(1)
-            self.driver.hide_keyboard()
-        except WebDriverException:
-            pass
-
-    def send_keys(self, locator, text):
-        element = self.wait_visible(locator)
-        element.send_keys(text)
-        # sleep(0.5)
-
-    def clear(self, locator):
-        element = self.wait_visible(locator)
-        element.clear()
-        sleep(0.5)
-
-    # get text
-    def get_text(self, locator):
-        element = self.wait_visible(locator)
-        return element.text
-
-    def teardown_driver(self):
-        self.driver.quite()
+        self.driver.hide_keyboard()

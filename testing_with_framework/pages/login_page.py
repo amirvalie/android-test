@@ -1,4 +1,5 @@
-from infra.base import Base
+from time import sleep
+from .base import Base
 
 
 class LoginPage(Base):
@@ -11,32 +12,42 @@ class LoginPage(Base):
         "xpath",
         "//android.widget.EditText[@bounds='[44,1185][1036,1331]']",
     )
-    otp_field = ("xpath", "//android.widget.Button[@bounds='[154,997][926,1129]']")
+    otp_field = ("class", "android.widget.EditText")
+
     submit_button = ("xpath", "//android.widget.Button[@content-desc='Confirm']")
 
     def click_login_button(self):
-        self.click(self.login_button)
+        self.page_utils.get_element(self.login_button).click()
 
     def click_username_field(self):
-        self.click(self.username_field)
+        self.page_utils.get_element(self.username_field).click()
 
     def click_password_field(self):
-        self.click(self.login_button)
+        self.page_utils.get_element(self.login_button).click()
 
     def click_otp_button(self):
-        self.click(self.otp_field)
+        self.page_utils.get_element(self.otp_field).click()
 
     def click_submit_button(self):
-        self.click(self.submit_button)
+        self.page_utils.get_element(self.submit_button)
 
     def input_username_field(self, data: str):
-        self.send_keys(self.username_field, data)
-        self.hide_keyboard()
+        obj = self.page_utils.get_element(self.username_field)
+        obj.click()
+        obj.send_keys(data)
+        self.page_utils.hide_keyboard()
 
     def input_password(self, data: str):
-        self.send_keys(self.password_field, data)
-        self.hide_keyboard()
+        obj = self.page_utils.get_element(self.password_field)
+        obj.click()
+        obj.send_keys(data)
+        self.page_utils.hide_keyboard()
 
     def input_otp(self):
-        otp_code = input("Etner your OTP:")
-        self.send_keys(self.otp_field, otp_code)
+        otp_code = input("OTP code:")
+        obj = self.page_utils.get_element(self.otp_field)
+        self.page_utils.hide_keyboard()
+        sleep(2)
+        obj.click()
+        obj.send_keys(otp_code)
+        self.page_utils.hide_keyboard()
